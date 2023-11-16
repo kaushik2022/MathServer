@@ -1,5 +1,5 @@
 # Ex.05 Design a Website for Server Side Processing
-## Date:14.11.23
+## Date:
 
 ## AIM:
 To design a website to find total surface area of a square prism in server side.
@@ -28,108 +28,118 @@ Create a HTML file to implement form based input and output.
 Publish the website in the given URL.
 
 ## PROGRAM :
-```html
-<html>
-<head>
-<meta charset='utf-8'>
-<meta http-equiv='X-UA-Compatible' content='IE=edge'>
-<title>Area of Rectangle</title>
-<meta name='viewport' content='width=device-width, initial-scale=1'>
-<style type="text/css">
-body 
-{
-background-color:cyan;
-}
-.edge {
-width: 1080px;
-margin-left: auto;
-margin-right: auto;
-padding-top: 200px;
-padding-left: 300px;
-}
-.box {
-display:block;
-border: Thick dashed lime;
-width: 500px;
-min-height: 300px;
-font-size: 20px;
-background-color: purple;
-}
-.formelt{
-color: Red;
-text-align: center;
-margin-top: 5px;
-margin-bottom: 5px;
-}
-h1
-{
-color: yellow;
-text-align: center;
-padding-top: 20px;
-}
-</style>
-</head>
-<body>
-<div class="edge">
-<div class="box">
-<h1>Area of a Rectangle</h1>
-<form method="POST">
-{% csrf_token %}
-<div class="formelt">
-Length : <input type="text" name="length" value="{{l}}"></input>(in m)<br/>
-</div>
-<div class="formelt">
-Breadth : <input type="text" name="breadth" value="{{b}}"></input>(in m)<br/>
-</div>
-<div class="formelt">
-<input type="submit" value="Calculate"></input><br/>
-</div>
-<div class="formelt">
-Area : <input type="text" name="area" value="{{area}}"></input>m<sup>2</sup><br/>
-</div>
-</form>
-</div>
-</div>
-</body>
-</html>
 
+## math.html:
 ```
-## VIEWS:
-```py
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Area of Square Prism</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <style type="text/css">
+        body {
+            background-color:blue;
+        }
+
+        .edge {
+            display: flex;
+            height: 100vh;
+            width: 100%;    
+            justify-content: center;
+            align-items: center;
+        }
+
+        .box {
+            display: block;
+            width: 500px;
+            min-height: 300px;
+            font-size: 20px;
+            background: rgb(142, 152, 7);
+            background: linear-gradient(90deg, rgb(152, 7, 104) 9%, rgb(0, 7, 90) 56%);
+            border-radius: 10px;
+            box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+        }
+
+        .formelt {
+            color: red;
+            text-align: center;
+            margin-top: 7px;
+            margin-bottom: 6px;
+        }
+
+        h1 {
+            color: white;
+            text-align: center;
+            padding-top: 20px;
+        }
+        input{
+            margin: 5px;
+            padding: 5px;
+            border-radius: 5px;
+            border: none;
+
+        }
+    </style>
+</head>
+
+<body>
+    <div class="edge">
+        <div class="box">
+            <h1>Area of  Square Prism</h1>
+            <form method="POST">
+                {% csrf_token %}
+                <div class="formelt">
+                    base : <input type="text" name="length" value="{{a}}"></input>(in m)<br />
+                </div>
+                <div class="formelt">
+                    Height : <input type="text" name="breadth" value="{{h}}"></input>(in m)<br />
+                </div>
+                <div class="formelt">
+                    <input type="submit" value="Calculate"></input><br />
+                </div>
+                <div class="formelt">
+                    Area : <input type="text" name="area" value="{{area}}"></input>m<sup>2</sup><br />
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>
+```
+## views.py:
+```
+
 from django.shortcuts import render
-from django.template  import loader
-from django.shortcuts import render
-# Create your views here.
 
-
-
-
-def rectarea(request):
+def prismarea(request):
     context={}
     context['area'] = "0"
-    context['l'] = "0"
-    context['b'] = "0"
+    context['a'] = "0"
+    context['h'] = "0"
     if request.method == 'POST':
         print("POST method is used")
-        l = request.POST.get('length','0')
-        b = request.POST.get('breadth','0')
+        a = request.POST.get('length','0')
+        h = request.POST.get('breadth','0')
         print('request=',request)
-        print('Length=',l)
-        print('Breadth=',b)
-        area = int(l) * int(b)
+        print('Length=',a)
+        print('Breadth=',h)
+        area = 2*(int(a)**2) + 4*int(a)*int(h)
         context['area'] = area
-        context['l'] = l
-        context['b'] = b
+        context['a'] = a
+        context['h'] = h
         print('Area=',area)
-    return render(request,'myapp/math.html',context)
+    return render(request,'jaiapp/math.html',context)
 ```
-## URL:
-```py
-"""myproj URL Configuration
+## urls.py:
+```
 
+URL configuration for jai project.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/3.1/topics/http/urls/
+    https://docs.djangoproject.com/en/4.2/topics/http/urls/
 Examples:
 Function views
     1. Add an import:  from my_app import views
@@ -141,28 +151,22 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
 from django.contrib import admin
 from django.urls import path
-from myapp import views
-
-
+from jaiapp import views
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('areaofrectangle/',views.rectarea,name="areaofrectangle"),
+    path('areaofrectangle/',views.prismarea,name="areaofrectangle"),
+    path('',views.prismarea,name="areaofrectangleroot")
 ]
-
-
-"""path('',views.rectarea,name="areaofrectangleroot")"""
-
-
-
 ```
+## OUTPUT:
+![Screenshot (15)](https://github.com/sanjay3061/MathServer/assets/121215929/6391f842-75cc-41eb-b4a9-2e22468cf9ad)
 
-## SERVER SIDE PROCESSING:
+![Screenshot (14)](https://github.com/sanjay3061/MathServer/assets/121215929/0497f9b3-348a-44ce-9e1d-05a77cab8f43)
 
-![Alt text](s.png)
-## HOMEPAGE:
 
-![Alt text](<Screenshot 2023-11-14 133229.png>)
+
 ## RESULT:
 The program for performing server side processing is completed successfully.
